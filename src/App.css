@@ -1,38 +1,83 @@
+*::before, *::after {
+    box-sizing: border-box;
+}
+
 .App {
-  text-align: center;
+    text-align: center;
+    height: 100vh;
+    font-family: sans-serif;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body {
+    justify-content: center;
+    margin: 2rem;
+    background: linear-gradient(to right, #00F3, #00AADD);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.game-container > h1, p {
+    justify-content: center;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.game-style {
+    margin-bottom: 20px;
+    display: grid;
+    gap: 8px;
+    grid-template-columns: repeat(3, 1fr);
 }
 
-.App-link {
-  color: #61dafb;
+.countdown {
+    height: 10vh;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.battlefield {
+    height: 25vh;
+    display: flex;
+    padding: 1rem;
+    justify-content: center;
+}
+
+.computer-choice {
+    width: 250px;
+}
+
+.player-choice {
+    width: 250px;
+    transform: rotateY(180deg);
+}
+
+h4 {
+    padding-top: 1rem;
+}
+.weaponry {
+    display: grid;
+    justify-content: center;
+    gap: 20px;
+    grid-template-columns: repeat(3, .15fr);
+}
+
+.weapon {
+    font-size: 7rem;
+    color: white;
+    cursor: pointer;
+}
+
+.weapon:hover {
+    color: rgba(255, 255, 255, 0.76);
+}
+
+.fade-in {
+    opacity: .8;
+    transition: opacity 1.5s ease;
+}
+
+.fade-out {
+    opacity: 0;
+    transition: opacity 1.5s ease;
+}
+
+.scoreboard {
+    display: grid;
+    justify-content: center;
+    gap: 20px;
+    grid-template-columns: repeat(3, .15fr);
 }
