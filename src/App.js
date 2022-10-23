@@ -2,7 +2,6 @@ import React from "react";
 import { useReducer, useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHandRock, faHandPaper, faHandScissors } from "@fortawesome/free-solid-svg-icons";
-// import {Countdown} from './Countdown'
 import './App.css';
 
 
@@ -56,7 +55,7 @@ function play(user, computer) {
     return 'draw'
   }
   if (winner(weapons.indexOf(user) - weapons.indexOf(computer), weapons.length) < weapons.length / 2) {
-    return 'user' 
+    return 'user'
   } else {
     return 'computer'
   }
@@ -80,8 +79,10 @@ const initialState = {
 function App() {
   const [{player, computer, playerPoints, computerPoints, numberOfDraws, roundWinner, winner, resetGame}, dispatch]
       = useReducer(reducer, initialState);
+
   const [playerSelect, setPlayerSelect] = useState('Rock')
-  const [computerSelect, setComputerSelect] = useState(random_selection())
+  const [computerSelect, setComputerSelect] = useState('Rock')
+
   const [fadeProp, setFadeProp] = useState({fade: 'fade-in'})
   const [wordOrder, setWordOrder] = useState(0)
   const [showCountdown, setShowCountdown] = useState(false)
@@ -136,37 +137,48 @@ function App() {
         <button>Two out of Three</button>
         <button>Reset</button>
       </div>
-        <h1>
+        <h1 className="countdown">
           <span className={fadeProp.fade} style={{display: showCountdown ? 'block' : 'none'}}>{countdownWords[wordOrder]}</span>
         </h1>
-      <div className="battlefield">
-        <div className="player-choice">
-          <img className="player-img" src={`../images/${playerSelect}.png`} alt=''></img>
-        </div>
-        <div className="computer-choice">
-          <img className="computer-img" src={`../images/${computerSelect}.png`} alt=''></img>
-        </div>
-      </div>
-      <h4>Pick your weapon:</h4>
-      <div className="weaponry">
 
-        <FontAwesomeIcon className="weapon" icon={faHandRock} 
-          onClick={() => {
-            setPlayerSelect(weapons[0])
-            console.log(playerSelect)}}/>
-        <FontAwesomeIcon className="weapon" icon={faHandPaper} 
-          onClick={() => setPlayerSelect(weapons[1])}/>
-        <FontAwesomeIcon className="weapon" icon={faHandScissors} 
-          onClick={() => setPlayerSelect(weapons[2])}/>
+      <div className="grid">
+
+        <div className="weaponry">
+          <h2>Pick your weapon:</h2>
+          <FontAwesomeIcon className="weapon" icon={faHandRock}
+                           onClick={() => {
+                             setPlayerSelect(weapons[0])
+                             console.log(playerSelect)}}/>
+          <FontAwesomeIcon className="weapon" icon={faHandPaper}
+                           onClick={() => setPlayerSelect(weapons[1])}/>
+          <FontAwesomeIcon className="weapon" icon={faHandScissors}
+                           onClick={() => setPlayerSelect(weapons[2])}/>
+        </div>
+        <div className="middle">
+          <div className="battlefield">
+            <div className="player-choice">
+              <img className="player-img" src={`../images/${playerSelect}.png`} alt=''></img>
+            </div>
+            <div className="computer-choice">
+              <img className="computer-img" src={`../images/${computerSelect}.png`} alt=''></img>
+            </div>
+          </div>
+
+          <h1>{winner}</h1>
+        </div>
+
+
+        <div className="scoreboard">
+          <h2>Scoreboard</h2>
+          <p>Player: {playerPoints}</p>
+          <p>Computer: {computerPoints}</p>
+          <p>Draws: {numberOfDraws}</p>
+        </div>
 
       </div>
-        <h1>Winner: {winner}</h1>
-      <div className="scoreboard">
-        <p>Player Points: {playerPoints}</p>
-        <p>Computer Points: {computerPoints}</p>
-        <p>Draws: {numberOfDraws}</p>
-      </div>
-      <div className="how-it-works">
+
+
+      <div className="directions">
         <p>Choose your game style, you then have 3 seconds to choose your weapon. If you do not choose a weapon a weapon will be chosen for you.</p>
       </div>
 

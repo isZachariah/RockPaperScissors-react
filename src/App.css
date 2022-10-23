@@ -29,6 +29,11 @@ body {
     height: 10vh;
 }
 
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr)
+}
+
 .battlefield {
     height: 25vh;
     display: flex;
@@ -45,24 +50,29 @@ body {
     transform: rotateY(180deg);
 }
 
-h4 {
-    padding-top: 1rem;
+.middle > h1 {
+    padding-top: 5rem;
 }
+
 .weaponry {
     display: grid;
     justify-content: center;
     gap: 20px;
-    grid-template-columns: repeat(3, .15fr);
+    grid-template-rows: repeat(3, .15fr);
 }
 
 .weapon {
-    font-size: 7rem;
+    font-size: 5rem;
     color: white;
     cursor: pointer;
 }
 
 .weapon:hover {
     color: rgba(255, 255, 255, 0.76);
+}
+
+.countdown {
+    height: 1vh;
 }
 
 .fade-in {
@@ -79,5 +89,13 @@ h4 {
     display: grid;
     justify-content: center;
     gap: 20px;
-    grid-template-columns: repeat(3, .15fr);
+    grid-template-rows: repeat(3, .15fr);
+}
+
+.scoreboard > p {
+    justify-items: self-start;
+}
+
+.directions {
+    padding-top: 1.5rem;
 }
