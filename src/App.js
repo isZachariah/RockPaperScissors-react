@@ -2,6 +2,7 @@ import React from "react";
 import { useReducer, useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHandRock, faHandPaper, faHandScissors } from "@fortawesome/free-solid-svg-icons";
+import {Countdown} from "./Countdown";
 import './App.css';
 
 
@@ -10,16 +11,18 @@ const weapons = ['Rock', 'Paper', 'Scissors'];
 const random_selection = () => weapons[Math.floor(Math.random() * weapons.length)];
 
 const Actions = {
-  oneAndDone: 'one-and-done',
-  twoOutOfThree: 'two-out-of-three',
+  // oneAndDone: 'one-and-done',
+  // twoOutOfThree: 'two-out-of-three',
+  shoot: 'shoot',
+  select: 'select',
   reset: 'reset'
 }
 
 function reducer(state, {type, payload}) {
   switch(type) {
-    case Actions.oneAndDone:
-      let winner = play(payload.player, payload.computer);
-      if (winner === 'user') {
+    case Actions.shoot:
+      console.log(`Player: ${payload.player}, computer: ${payload.computer}`)
+      if (payload.winner === 'user') {
         return {
           ...state,
           player: payload.player,
@@ -29,7 +32,7 @@ function reducer(state, {type, payload}) {
           winner: 'Player reigns!'
         }
       }
-      else if (winner === 'computer') {
+      else if (payload.winner === 'computer') {
         return {
           ...state,
           player: payload.player,
@@ -39,13 +42,18 @@ function reducer(state, {type, payload}) {
           winner: 'Computer reigns!'
         }
       }
-      return {
+      else return {
         ...state,
         player: payload.player,
         computer: payload.computer,
         numberOfDraws: state.numberOfDraws + 1,
         roundWinner: 'Draw!',
         winner: 'Nobody Wins!'
+      }
+    case Actions.reset:
+      return {
+        ...state,
+        ...payload
       }
   }
 }
@@ -67,62 +75,23 @@ function winner(subtrahend, weapons_length) {
 }
 
 const initialState = {
-  player: '',
-  computer: '',
+  player: 'Rock',
+  computer: 'Rock',
   playerPoints: 0,
   computerPoints: 0,
   numberOfDraws: 0,
   roundWinner: 'No winner determined',
   winner: 'Who will reign as the champion?',
-  resetGame: false,
 }
 function App() {
-  const [{player, computer, playerPoints, computerPoints, numberOfDraws, roundWinner, winner, resetGame}, dispatch]
+  const [{player, computer, playerPoints, computerPoints, numberOfDraws, roundWinner, winner}, dispatch]
       = useReducer(reducer, initialState);
 
   const [playerSelect, setPlayerSelect] = useState('Rock')
   const [computerSelect, setComputerSelect] = useState('Rock')
 
-  const [fadeProp, setFadeProp] = useState({fade: 'fade-in'})
-  const [wordOrder, setWordOrder] = useState(0)
   const [showCountdown, setShowCountdown] = useState(false)
-
-  const FADE_INTERVAL_MS = 500;
-  const CHANGE_WORD_INTERVAL_MS = FADE_INTERVAL_MS * 2;
-  const countdownWords = ['ROCK', 'PAPER', 'SCISSORS', 'SHOOT!'];
-
-
-
-  function setup(action) {
-    setTimeout(() => {
-      dispatch({
-      type: action,
-      payload : { 
-        player: playerSelect,
-        computer: setComputerSelect(random_selection()),
-      }
-    })
-      setShowCountdown(false)
-    }, 4000)
-
-  }
-
-  useEffect(() => {
-    const fadeTimeout = setInterval(() => {
-      fadeProp.fade === 'fade-in' ? setFadeProp({ fade: 'fade-out' }) : setFadeProp({ fade: 'fade-in' })
-    }, FADE_INTERVAL_MS)
-
-    return () => clearInterval(fadeTimeout)
-  }, [fadeProp])
-
-  useEffect(() => {
-    const wordTimeout = setInterval(() => {
-      setWordOrder((prevWordOrder) => (prevWordOrder + 1) % countdownWords.length)
-    }, CHANGE_WORD_INTERVAL_MS)
-
-    return () => clearInterval(wordTimeout)
-  }, [])
-
+// set the images to a different vaariable to show only once the game has finished -- figure out how to play the game inline and displ
 
   return (
     <div className="App">
@@ -132,35 +101,56 @@ function App() {
       <div className="game-style">
         <button onClick={() => {
           setShowCountdown(true)
-          setup(Actions.oneAndDone)
+          setTimeout(() => {
+            setComputerSelect(random_selection)
+            let winner = play(playerSelect, computerSelect)
+            dispatch({
+              type: Actions.shoot,
+              payload: {
+                player: playerSelect,
+                computer: computerSelect,
+                winner: winner
+              }
+            })
+            setShowCountdown(false)
+          }, 4000)
         }}>One & Done</button>
         <button>Two out of Three</button>
-        <button>Reset</button>
+        <button onClick={() => {
+          dispatch({
+            type: Actions.reset,
+            payload: {
+              ...initialState
+            }
+          })
+        }}>Reset</button>
       </div>
-        <h1 className="countdown">
-          <span className={fadeProp.fade} style={{display: showCountdown ? 'block' : 'none'}}>{countdownWords[wordOrder]}</span>
-        </h1>
+
+      <div className="countdown">{showCountdown && <Countdown/>}</div>
 
       <div className="grid">
 
         <div className="weaponry">
           <h2>Pick your weapon:</h2>
-          <FontAwesomeIcon className="weapon" icon={faHandRock}
+          <FontAwesomeIcon className="weapon" disabled={showCountdown} icon={faHandRock}
+                           style={playerSelect === weapons[0] ? {color: 'rgba(255, 255, 255, 0.51)'} : {color: 'white'}}
                            onClick={() => {
                              setPlayerSelect(weapons[0])
                              console.log(playerSelect)}}/>
-          <FontAwesomeIcon className="weapon" icon={faHandPaper}
+          <FontAwesomeIcon className="weapon" disabled={showCountdown} icon={faHandPaper}
+                           style={playerSelect === weapons[1] ? {color: 'rgba(255, 255, 255, 0.51)'} : {color: 'white'}}
                            onClick={() => setPlayerSelect(weapons[1])}/>
-          <FontAwesomeIcon className="weapon" icon={faHandScissors}
+          <FontAwesomeIcon className="weapon" disabled={showCountdown} icon={faHandScissors}
+                           style={playerSelect === weapons[2] ? {color: 'rgba(255, 255, 255, 0.51)'} : {color: 'white'}}
                            onClick={() => setPlayerSelect(weapons[2])}/>
         </div>
         <div className="middle">
           <div className="battlefield">
             <div className="player-choice">
-              <img className="player-img" src={`../images/${playerSelect}.png`} alt=''></img>
+              <img className="player-img" src={`../images/${player}.png`} alt=''></img>
             </div>
             <div className="computer-choice">
-              <img className="computer-img" src={`../images/${computerSelect}.png`} alt=''></img>
+              <img className="computer-img" src={`../images/${computer}.png`} alt=''></img>
             </div>
           </div>
 
