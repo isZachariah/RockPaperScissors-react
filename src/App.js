@@ -1,5 +1,5 @@
 import React from "react";
-import { useReducer, useState, useEffect } from "react";
+import { useReducer, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHandRock, faHandPaper, faHandScissors } from "@fortawesome/free-solid-svg-icons";
 import {Countdown} from "./Countdown";
@@ -8,35 +8,44 @@ import './App.css';
 
 const weapons = ['Rock', 'Paper', 'Scissors'];
 
-const random_selection = () => weapons[Math.floor(Math.random() * weapons.length)];
-
+// Actions for useReducer hook
 const Actions = {
-  // oneAndDone: 'one-and-done',
-  // twoOutOfThree: 'two-out-of-three',
-  shoot: 'shoot',
-  select: 'select',
-  reset: 'reset'
+  shoot: 'shoot',   // Play the game
+  select: 'select', // Player selects their weapon
+  reset: 'reset'    // reset the scores.
 }
 
+// Reducer function for useReducer hook
 function reducer(state, {type, payload}) {
   switch(type) {
+    case Actions.select:
+      return {
+        ...state,
+        playerSelection: payload.player,
+        computerSelection: payload.computer
+      }
     case Actions.shoot:
-      console.log(`Player: ${payload.player}, computer: ${payload.computer}`)
-      if (payload.winner === 'user') {
+      if (state.playerSelection === '') { // make a selection for the player if they do not make one.
+        state.playerSelection = weapons[Math.floor(Math.random() * weapons.length)];
+        state.computerSelection = weapons[Math.floor(Math.random() * weapons.length)];
+      }
+      console.log(`Player: ${state.playerSelection}, computer: ${state.computerSelection}`)
+      let winner = play(state.playerSelection, state.computerSelection)
+      if (winner === 'user') {
         return {
           ...state,
-          player: payload.player,
-          computer: payload.computer,
+          player: state.playerSelection,
+          computer: state.computerSelection,
           playerPoints: state.playerPoints + 1,
           roundWinner: 'Player!',
           winner: 'Player reigns!'
         }
       }
-      else if (payload.winner === 'computer') {
+      else if (winner === 'computer') {
         return {
           ...state,
-          player: payload.player,
-          computer: payload.computer,
+          player: state.playerSelection,
+          computer: state.computerSelection,
           computerPoints: state.computerPoints + 1,
           roundWinner: 'Computer!',
           winner: 'Computer reigns!'
@@ -44,8 +53,8 @@ function reducer(state, {type, payload}) {
       }
       else return {
         ...state,
-        player: payload.player,
-        computer: payload.computer,
+        player: state.playerSelection,
+        computer: state.computerSelection,
         numberOfDraws: state.numberOfDraws + 1,
         roundWinner: 'Draw!',
         winner: 'Nobody Wins!'
@@ -57,6 +66,7 @@ function reducer(state, {type, payload}) {
       }
   }
 }
+
 
 function play(user, computer) {
   if (user === computer) {
@@ -77,21 +87,31 @@ function winner(subtrahend, weapons_length) {
 const initialState = {
   player: 'Rock',
   computer: 'Rock',
+  playerSelection: '',
+  computerSelection: '',
   playerPoints: 0,
   computerPoints: 0,
   numberOfDraws: 0,
-  roundWinner: 'No winner determined',
   winner: 'Who will reign as the champion?',
 }
+
 function App() {
-  const [{player, computer, playerPoints, computerPoints, numberOfDraws, roundWinner, winner}, dispatch]
+  const [{player, computer, playerSelection, computerSelection, playerPoints, computerPoints, numberOfDraws, winner}, dispatch]
       = useReducer(reducer, initialState);
 
-  const [playerSelect, setPlayerSelect] = useState('Rock')
-  const [computerSelect, setComputerSelect] = useState('Rock')
+  // boolean to show countdown and allow selection of weapon by player
+  const [playing, setPlaying] = useState(false)
 
-  const [showCountdown, setShowCountdown] = useState(false)
-// set the images to a different vaariable to show only once the game has finished -- figure out how to play the game inline and displ
+  // Set player selection based off of click event
+  const setSelection = selection => {
+    dispatch({
+      type: Actions.select,
+      payload: {
+        player: selection,
+        computer: weapons[Math.floor(Math.random() * weapons.length)]
+      },
+    });
+  }
 
   return (
     <div className="App">
@@ -100,22 +120,19 @@ function App() {
       <p>Rock, Paper, Scissors</p>
       <div className="game-style">
         <button onClick={() => {
-          setShowCountdown(true)
+          setPlaying(true)
           setTimeout(() => {
-            setComputerSelect(random_selection)
-            let winner = play(playerSelect, computerSelect)
             dispatch({
               type: Actions.shoot,
               payload: {
-                player: playerSelect,
-                computer: computerSelect,
-                winner: winner
+                player: playerSelection,
+                computer: computerSelection,
               }
             })
-            setShowCountdown(false)
+            setPlaying(false)
+            setSelection('')
           }, 4000)
-        }}>One & Done</button>
-        <button>Two out of Three</button>
+        }}>Play Round</button>
         <button onClick={() => {
           dispatch({
             type: Actions.reset,
@@ -125,24 +142,19 @@ function App() {
           })
         }}>Reset</button>
       </div>
-
-      <div className="countdown">{showCountdown && <Countdown/>}</div>
-
+      <div className="countdown">{ playing && <Countdown/>}</div>
       <div className="grid">
-
         <div className="weaponry">
           <h2>Pick your weapon:</h2>
-          <FontAwesomeIcon className="weapon" disabled={showCountdown} icon={faHandRock}
-                           style={playerSelect === weapons[0] ? {color: 'rgba(255, 255, 255, 0.51)'} : {color: 'white'}}
-                           onClick={() => {
-                             setPlayerSelect(weapons[0])
-                             console.log(playerSelect)}}/>
-          <FontAwesomeIcon className="weapon" disabled={showCountdown} icon={faHandPaper}
-                           style={playerSelect === weapons[1] ? {color: 'rgba(255, 255, 255, 0.51)'} : {color: 'white'}}
-                           onClick={() => setPlayerSelect(weapons[1])}/>
-          <FontAwesomeIcon className="weapon" disabled={showCountdown} icon={faHandScissors}
-                           style={playerSelect === weapons[2] ? {color: 'rgba(255, 255, 255, 0.51)'} : {color: 'white'}}
-                           onClick={() => setPlayerSelect(weapons[2])}/>
+          <FontAwesomeIcon className="weapon" icon={faHandRock}
+                           style={ playerSelection === weapons[0] ? {color: 'rgba(255, 255, 255, 0.51)'} : {color: 'white'}}
+                           onClick={ () => playing ? setSelection(weapons[0]) : null }/>
+          <FontAwesomeIcon className="weapon" icon={faHandPaper}
+                           style={ playerSelection === weapons[1] ? {color: 'rgba(255, 255, 255, 0.51)'} : {color: 'white'}}
+                           onClick={ () => playing ? setSelection(weapons[1]) : null }/>
+          <FontAwesomeIcon className="weapon" icon={faHandScissors}
+                           style={ playerSelection === weapons[2] ? {color: 'rgba(255, 255, 255, 0.51)'} : {color: 'white'}}
+                           onClick={ () => playing ? setSelection(weapons[2]) : null }/>
         </div>
         <div className="middle">
           <div className="battlefield">
@@ -153,25 +165,18 @@ function App() {
               <img className="computer-img" src={`../images/${computer}.png`} alt=''></img>
             </div>
           </div>
-
           <h1>{winner}</h1>
         </div>
-
-
         <div className="scoreboard">
           <h2>Scoreboard</h2>
           <p>Player: {playerPoints}</p>
           <p>Computer: {computerPoints}</p>
           <p>Draws: {numberOfDraws}</p>
         </div>
-
       </div>
-
-
       <div className="directions">
-        <p>Choose your game style, you then have 3 seconds to choose your weapon. If you do not choose a weapon a weapon will be chosen for you.</p>
+        <p>Select play round, you then have 3 seconds to choose your weapon. If you do not choose a weapon a weapon will be chosen for you.</p>
       </div>
-
     </div>
     </div>
   );

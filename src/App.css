@@ -22,7 +22,7 @@ body {
     margin-bottom: 20px;
     display: grid;
     gap: 8px;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
 }
 
 .countdown {
@@ -68,7 +68,7 @@ body {
 }
 
 .weapon:hover {
-    color: rgba(255, 255, 255, 0.76);
+    color: rgba(194, 156, 201, 0.76);
 }
 
 .countdown {
@@ -94,6 +94,7 @@ body {
 
 .scoreboard > p {
     justify-items: self-start;
+    font-size: 1.25rem;
 }
 
 .directions {
