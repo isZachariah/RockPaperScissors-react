@@ -10,9 +10,9 @@ const weapons = ['Rock', 'Paper', 'Scissors'];
 
 // Actions for useReducer hook
 const Actions = {
-  shoot: 'shoot',   // Play the game
-  select: 'select', // Player selects their weapon
-  reset: 'reset'    // reset the scores.
+  shoot:  'shoot',      // Play the game
+  select: 'select',     // Player selects their weapon
+  reset:  'reset',      // reset the scores.
 }
 
 // Reducer function for useReducer hook
@@ -29,7 +29,6 @@ function reducer(state, {type, payload}) {
         state.playerSelection = weapons[Math.floor(Math.random() * weapons.length)];
         state.computerSelection = weapons[Math.floor(Math.random() * weapons.length)];
       }
-      console.log(`Player: ${state.playerSelection}, computer: ${state.computerSelection}`)
       let winner = play(state.playerSelection, state.computerSelection)
       if (winner === 'user') {
         return {
@@ -67,7 +66,11 @@ function reducer(state, {type, payload}) {
   }
 }
 
-
+/**   Play
+ * @param {string} user
+ * @param {string} computer
+ * @return {string} winner - draw, user, or computer
+ * **/
 function play(user, computer) {
   if (user === computer) {
     return 'draw'
@@ -79,11 +82,24 @@ function play(user, computer) {
   }
 }
 
+/**   winner - determines the winner of RPS
+ * @param {number} subtrahend (index of user choice - index of computer choice)
+ * @param {number} weapons_length (3)
+ * @return {number} if the result is less than zero, add weapons_length, otherwise return
+ * **/
 function winner(subtrahend, weapons_length) {
   const mod = subtrahend % weapons_length;
   return mod < 0 ? mod + weapons_length : mod
 }
 
+/** InitialState
+ * player and computer are used to reveal the winner once the game has been played.
+ * playerSelection and computerSelection keep track of the choices before the game is plyed nd the winner is revealed.
+ * player points, computer points, and number of draws are tracked.
+ * winner is stored as a string.
+ *
+ * All of this is a param in the useReducer function, as well as the updated values being returned.
+ * **/
 const initialState = {
   player: 'Rock',
   computer: 'Rock',
@@ -95,6 +111,9 @@ const initialState = {
   winner: 'Who will reign as the champion?',
 }
 
+/** App()
+ * useReducer and useState are used to track state
+ * **/
 function App() {
   const [{player, computer, playerSelection, computerSelection, playerPoints, computerPoints, numberOfDraws, winner}, dispatch]
       = useReducer(reducer, initialState);
@@ -112,7 +131,7 @@ function App() {
       },
     });
   }
-
+/** jsx to set up the application **/
   return (
     <div className="App">
       <div className="game-container">
