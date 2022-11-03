@@ -1,5 +1,9 @@
 # Project One: Rock, Paper, Scissors #
 
+I built this first with react, it works. You press the play round button and are given 3ish seconds to make your choice which is displayed on the 'battlefield' via the images. The winner is then given the point and this goes on until the player selects reset.
+
+I think I actually learned a ton going about it this way. I was inspired to figure out how to create my own useState and useReducer functions once I understood what they do and how essential they are. I also am in the process of figuring out how to implement and parse JSX w/o react, using babel or typescript.
+
 Using much of what you built-in Project 1, you will create a single page Rock, Paper, Scissors Game.
 
 ### Requirements ###
