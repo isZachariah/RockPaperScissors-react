@@ -1,6 +1,6 @@
 import React from "react";
 import {useState, useEffect} from "react";
-import "./App.css"
+import "../App.css"
 
 const FADE_INTERVAL_MS = 500;
 const CHANGE_WORD_INTERVAL_MS = FADE_INTERVAL_MS * 2;
@@ -33,7 +33,7 @@ export const Countdown = () => {
     }, [])
 
     return (
-        <h1 className="countdown">
+        <h1 className="countdown text-9xl text-fuchsia-700 mt-52">
             <span className={fadeProp.fade}>{countdownWords[wordOrder]}</span>
         </h1>
     )

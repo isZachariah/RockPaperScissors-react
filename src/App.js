@@ -2,11 +2,15 @@ import React from "react";
 import { useReducer, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHandRock, faHandPaper, faHandScissors } from "@fortawesome/free-solid-svg-icons";
-import {Countdown} from "./Countdown";
+import {Countdown} from "./components/Countdown";
 import './App.css';
+import {Scoreboard} from "./components/Scoreboard";
+import {GameStyle} from "./components/GameStyle";
+import {Weaponry} from "./components/Weaponry";
+import {Battlefield} from "./components/Battlefield";
 
 
-const weapons = ['Rock', 'Paper', 'Scissors'];
+export const weapons = ['Rock', 'Paper', 'Scissors'];
 
 // Actions for useReducer hook
 const Actions = {
@@ -63,6 +67,7 @@ function reducer(state, {type, payload}) {
         ...state,
         ...payload
       }
+    default: return state
   }
 }
 
@@ -121,6 +126,8 @@ function App() {
   // boolean to show countdown and allow selection of weapon by player
   const [playing, setPlaying] = useState(false)
 
+  // const scores = { playerPoints, computerPoints, numberOfDraws }
+
   // Set player selection based off of click event
   const setSelection = selection => {
     dispatch({
@@ -131,72 +138,30 @@ function App() {
       },
     });
   }
-/** jsx to set up the application **/
+
   return (
-    <div className="App">
-      <div className="game-container">
-      <h1>Rochambeau</h1>
-      <p>Rock, Paper, Scissors</p>
-      <div className="game-style">
-        <button onClick={() => {
-          setPlaying(true)
-          setTimeout(() => {
-            dispatch({
-              type: Actions.shoot,
-              payload: {
-                player: playerSelection,
-                computer: computerSelection,
-              }
-            })
-            setPlaying(false)
-            setSelection('')
-          }, 4000)
-        }}>Play Round</button>
-        <button onClick={() => {
-          dispatch({
-            type: Actions.reset,
-            payload: {
-              ...initialState
-            }
-          })
-        }}>Reset</button>
-      </div>
-      <div className="countdown">{ playing && <Countdown/>}</div>
-      <div className="grid">
-        <div className="weaponry">
-          <h2>Pick your weapon:</h2>
-          <FontAwesomeIcon className="weapon" icon={faHandRock}
-                           style={ playerSelection === weapons[0] ? {color: 'rgba(255, 255, 255, 0.51)'} : {color: 'white'}}
-                           onClick={ () => playing ? setSelection(weapons[0]) : null }/>
-          <FontAwesomeIcon className="weapon" icon={faHandPaper}
-                           style={ playerSelection === weapons[1] ? {color: 'rgba(255, 255, 255, 0.51)'} : {color: 'white'}}
-                           onClick={ () => playing ? setSelection(weapons[1]) : null }/>
-          <FontAwesomeIcon className="weapon" icon={faHandScissors}
-                           style={ playerSelection === weapons[2] ? {color: 'rgba(255, 255, 255, 0.51)'} : {color: 'white'}}
-                           onClick={ () => playing ? setSelection(weapons[2]) : null }/>
+    <div className="App flex flex-col w-fit m-auto">
+      <div className={'flex flex-col m-auto'}>
+        <h1 className={'text-8xl font-bold text-white whitespace-nowrap mx-auto'}>Rock, Paper, Scissors</h1>
+        <div className="flex flex-row align-middle justify-center">
+          <GameStyle Actions={Actions} dispatch={dispatch} setPlaying={setPlaying}
+                     computerSelection={computerSelection} playerSelection={playerSelection}
+                     initialState={initialState} setSelection={setSelection} />
+
         </div>
-        <div className="middle">
-          <div className="battlefield">
-            <div className="player-choice">
-              <img className="player-img" src={`../images/${player}.png`} alt=''></img>
-            </div>
-            <div className="computer-choice">
-              <img className="computer-img" src={`../images/${computer}.png`} alt=''></img>
-            </div>
+        <div className="countdown">{ playing && <Countdown/>}</div>
+        <div className="flex flex-row gap-x-36 pt-12">
+          <Weaponry setSelection={setSelection} playerSelection={playerSelection} playing={playing} />
+          <div className="middle">
+            <Battlefield computer={computer} player={player} winner={winner} />
           </div>
-          <h1>{winner}</h1>
+          <Scoreboard computerPoints={computerPoints} playerPoints={playerPoints} numberOfDraws={numberOfDraws} />
         </div>
-        <div className="scoreboard">
-          <h2>Scoreboard</h2>
-          <p>Player: {playerPoints}</p>
-          <p>Computer: {computerPoints}</p>
-          <p>Draws: {numberOfDraws}</p>
+        <div className=" w-1/4 m-auto relative text-xl bottom-14 justify-center left-12">
+          <p>Select play round, you then have 3 seconds to choose your weapon. If you do not choose a weapon a weapon will be chosen for you.</p>
         </div>
       </div>
-      <div className="directions">
-        <p>Select play round, you then have 3 seconds to choose your weapon. If you do not choose a weapon a weapon will be chosen for you.</p>
-      </div>
-    </div>
+
     </div>
   );
 }

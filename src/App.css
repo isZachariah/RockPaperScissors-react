@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 *::before, *::after {
     box-sizing: border-box;
 }
@@ -11,34 +15,17 @@
 body {
     justify-content: center;
     margin: 2rem;
-    background: linear-gradient(to right, #00F3, #00AADD);
+    background: linear-gradient(to top, #0acdff, #ff9fb2);
 }
 
-.game-container > h1, p {
-    justify-content: center;
+h1 {
+    -webkit-text-stroke: 2px black;
 }
 
-.game-style {
-    margin-bottom: 20px;
-    display: grid;
-    gap: 8px;
-    grid-template-columns: repeat(2, 1fr);
-}
+
 
 .countdown {
     height: 10vh;
-}
-
-.grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr)
-}
-
-.battlefield {
-    height: 25vh;
-    display: flex;
-    padding: 1rem;
-    justify-content: center;
 }
 
 .computer-choice {
@@ -49,30 +36,15 @@ body {
     width: 250px;
     transform: rotateY(180deg);
 }
-
-.middle > h1 {
-    padding-top: 5rem;
-}
-
-.weaponry {
-    display: grid;
-    justify-content: center;
-    gap: 20px;
-    grid-template-rows: repeat(3, .15fr);
-}
-
 .weapon {
-    font-size: 5rem;
+    font-size: 8rem;
     color: white;
     cursor: pointer;
 }
 
-.weapon:hover {
-    color: rgba(194, 156, 201, 0.76);
-}
-
 .countdown {
     height: 1vh;
+    z-index: -1;
 }
 
 .fade-in {
@@ -83,20 +55,4 @@ body {
 .fade-out {
     opacity: 0;
     transition: opacity 1.5s ease;
-}
-
-.scoreboard {
-    display: grid;
-    justify-content: center;
-    gap: 20px;
-    grid-template-rows: repeat(3, .15fr);
-}
-
-.scoreboard > p {
-    justify-items: self-start;
-    font-size: 1.25rem;
-}
-
-.directions {
-    padding-top: 1.5rem;
 }
