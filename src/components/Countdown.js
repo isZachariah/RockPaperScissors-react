@@ -33,7 +33,7 @@ export const Countdown = () => {
     }, [])
 
     return (
-        <h1 className="countdown text-9xl text-fuchsia-700 mt-52">
+        <h1 className="countdown text-9xl text-[rgba(183,0,198,.09)]">
             <span className={fadeProp.fade}>{countdownWords[wordOrder]}</span>
         </h1>
     )
