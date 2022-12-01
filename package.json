@@ -2,7 +2,7 @@
   "name": "rps-react",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://https://iszachariah.github.io/is",
+  "homepage": "https://https://iszachariah.github.io/rps-react",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.2.0",
     "@fortawesome/free-solid-svg-icons": "^6.2.0",
