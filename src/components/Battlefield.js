@@ -2,6 +2,7 @@ import React from "react";
 
 
 export const Battlefield = ({player, computer, winner}) => {
+
     return (
         <div>
             <div className={'battlefield flex flex-row'}>
