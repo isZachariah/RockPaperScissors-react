@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "//iszachariah.github.io/is/static/css/main.4cf3a680.css",
+    "main.js": "//iszachariah.github.io/is/static/js/main.0b4e4112.js",
+    "index.html": "//iszachariah.github.io/is/index.html",
+    "main.4cf3a680.css.map": "//iszachariah.github.io/is/static/css/main.4cf3a680.css.map",
+    "main.0b4e4112.js.map": "//iszachariah.github.io/is/static/js/main.0b4e4112.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.4cf3a680.css",
+    "static/js/main.0b4e4112.js"
+  ]
+}
