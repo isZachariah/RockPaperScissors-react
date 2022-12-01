@@ -1,5 +1,5 @@
-import {weapons} from "./App";
-import {Actions} from "./App";
+import {weapons} from "./App.jsx";
+import {Actions} from "./App.jsx";
 
 // Reducer function for useReducer hook
 export function reducer(state, {type, payload}) {
